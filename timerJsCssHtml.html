@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimerApp</title>
+    <style>
+        *{
+            margin: 0px;
+        }
+        div{
+            display: block;
+        }
+        body{
+            width: 100vw;
+            height: 100vh;
+            background-color: aliceblue;
+        }
+        .container{
+            display: flex;
+            width: 100vw;
+            height: 50vh;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+        #theme{
+            margin-top: -40px;
+            margin-left: 10px ;
+            padding: 10px;
+            border-radius: 20px ;
+            position: fixed;
+            background-color:black;
+            color: white;
+            height: fit-content;
+            width: fit-content;
+            filter: drop-shadow(2px 2px 0px blue);
+            border: ridge white 0px
+        }
+        .heading{
+            margin: 5px;
+            text-align: center;
+            height: fit-content;
+            font-size: 2em;
+            width: 100vw;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .inputcontainer{
+            display: flex;
+            justify-content: center;
+            margin: 2px;
+        }
+        input{
+            font-size: 5em;
+            width: 30vw;
+            height: 125px;
+            border-radius: 40px;
+            border: solid cadetblue 2px;
+            transition: transform 0.5s , border-radius 0.5s;
+        }
+        input:hover{
+            transform: scale(1.04);
+            border-radius: 5px;
+        }
+        .buttonContainer{
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .colon{
+            display: inline;
+            font-size: 6em;
+        }
+        .resultContainer{
+            display: flex;
+            justify-content: center;
+            font-size: 4em;
+            margin-top: 10px;
+            height: fit-content;
+            width: fit-content;
+            background-color: burlywood;
+            border-radius: 20px;
+            padding: 7px;
+        }
+        a:link, a:visited, a:active{
+            color: black;
+        }
+        button{
+            border: solid ;
+            border-radius: 20px;
+            height: 50px;
+            width: 60vw;
+            font-size: 1.1em;
+            background-color: cornflowerblue;
+            color: white ;
+            transition: border-radius 0.3s;
+            filter: drop-shadow(2px 2px 2px 2px black);
+
+        }
+        button:hover{
+            border-radius: 10px;
+            transform: translate(0.05em , 0.05em);
+        }
+    </style>
+</head>
+<body>
+    <button id="theme" onclick="changeTheme()">
+        Dark Mode
+    </button>
+    <div class="container">
+        <div class="heading">
+            <h1>Timer App</h1>
+        </div>
+            <form>
+                <div class="inputcontainer">
+                    <input type="text" id="minutes" placeholder="1"><div class="colon">:</div><input type="text" id="seconds" placeholder="00"><br><br>
+                </div>
+                <div class="buttonContainer">
+                    <button id="start">Start</button>
+                    <button type="reset" id="reset">Reset</button>
+                </div>
+            </form>
+        <div class="resultContainer">
+            <p id="result" class="result"></p>
+        </div>
+    </div>
+    <br><br>
+    <script>
+        const startBtn = document.getElementById("start")
+        const themeBtn = document.getElementById("theme")
+        const resetBtn = document.getElementById("reset")
+        const display = document.getElementById("result")
+        let startTimer;
+        let theme = 0
+        function changeTheme(){
+
+            if(theme == 0){
+
+                theme = 1
+
+                themeBtn.textContent = "Light Mode"
+                document.body.style.backgroundColor = "black"
+                document.body.style.color = "aliceblue"
+            }
+
+            else if(theme == 1){
+
+                theme = 0
+                
+                themeBtn.textContent = "Dark Mode"
+                document.body.style.backgroundColor = "aliceblue"
+                document.body.style.color = "black"
+                themeBtn.style.bgColor = "black"
+                themeBtn.style.color = "white"
+            }
+        }
+        function validateInput(minutes , seconds){
+
+            if(isNaN(minutes) || isNaN(seconds)){
+                alert("Please Enter minutes or seconds properly")
+                display.innerHTML = "0:00"
+                clearInterval(startTimer)
+                return
+            }
+
+        }
+        startBtn.addEventListener("click" , (event) => {
+
+            event.preventDefault()
+
+            let minutes = parseInt(document.getElementById("minutes").value)
+            let seconds = parseInt(document.getElementById("seconds").value)
+
+            startTimer = setInterval(() => {
+
+                validateInput(minutes , seconds)
+
+                if (minutes === 0 && seconds === 0) {
+                    clearInterval(startTimer);
+                    display.innerHTML = "Times Up !";
+                    return; // Stop the interval
+                }
+
+                
+                if(seconds === 0){
+                    minutes--
+                    seconds = 59
+                }
+                else{
+                    seconds--
+                }
+                
+                if(seconds > 60){
+                    add = Math.trunc(seconds/60)
+                    minutes += add
+                    add = seconds%60
+                    seconds = 0
+                    seconds += add
+                }
+
+                if(seconds < 10){
+                    display.innerHTML = `${minutes}:0${seconds}`    
+                }
+                else{
+                    display.innerHTML = `${minutes}:${seconds}`
+                }
+            }, 1000)
+        })
+        resetBtn.addEventListener("click" , function (){
+            clearInterval(startTimer)
+            display.innerHTML = "0:00"
+            
+        })
+        
+    </script>
+</body>
+</html>

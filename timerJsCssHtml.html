@@ -24,12 +24,11 @@
             flex-wrap: wrap;
             margin-top: 50px;
         }
-        #theme{
+        #theme , #stopWatch , #home{
             margin-top: -40px;
             margin-left: 10px ;
             padding: 10px;
             border-radius: 20px ;
-            position: fixed;
             background-color:black;
             color: white;
             height: fit-content;
@@ -72,7 +71,7 @@
             display: inline;
             font-size: 6em;
         }
-        .resultContainer{
+        .resultContainer , .stopwatchResult{
             display: flex;
             justify-content: center;
             font-size: 4em;
@@ -102,19 +101,53 @@
             border-radius: 10px;
             transform: translate(0.05em , 0.05em);
         }
+        .buttonHeader{
+            margin-top: -30px;
+            position: fixed;
+            display: flex;
+            width: 100vw;
+            height: fit-content;
+        }
+        .stopWatchContainer{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
     </style>
 </head>
 <body>
-    <button id="theme" onclick="changeTheme()">
-        Dark Mode
-    </button>
+    <div class="buttonHeader">
+        
+        <div class="homeBtn">
+            <a href="#homepage">
+            <button id="home">home</button>
+            </a>
+        </div>
+
+
+
+        <div class="themeBtn"><button id="theme" onclick="changeTheme()">
+            Dark Mode
+        </button></div>
+        
+        
+
+        <div class="stopwatchBtn">
+            <a href="#stopwatch">
+            <button id="stopWatch">Stop Watch</button></a>
+        </div>
+        
+        
+    </div>
+    
     <div class="container">
+        <a name="homepage"></a>
         <div class="heading">
             <h1>Timer App</h1>
         </div>
             <form>
                 <div class="inputcontainer">
-                    <input type="text" id="minutes" placeholder="1"><div class="colon">:</div><input type="text" id="seconds" placeholder="00"><br><br>
+                    <input type="text" id="minutes" placeholder="min"><div class="colon">:</div><input type="text" id="seconds" placeholder="sec"><br><br>
                 </div>
                 <div class="buttonContainer">
                     <button id="start">Start</button>
@@ -124,6 +157,19 @@
         <div class="resultContainer">
             <p id="result" class="result"></p>
         </div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <a name="stopwatch"></a>
+        <span class="stopWatchContainer">
+            <div class="heading">
+                    <h1>Stop Watch</h1>
+            </div>
+            <p class="stopwatchResult" id="stopwatchResult"></p>
+            <div class="buttonContainer">
+                <button id="startStopWatch">Start</button>
+                <button id="stop">Stop</button>
+                <button type="reset" id="stopWatchReset">Reset</button>
+            </div>
+        </span>
     </div>
     <br><br>
     <script>
@@ -131,7 +177,13 @@
         const themeBtn = document.getElementById("theme")
         const resetBtn = document.getElementById("reset")
         const display = document.getElementById("result")
+        const stopwatchBtn = document.getElementById("startStopWatch")
+        const stopwatchResult = document.getElementById("stopwatchResult")
+        const stopBtn = document.getElementById("stop")
+        const stopReset = document.getElementById("stopWatchReset")
+        let startMilliSeconds;
         let startTimer;
+        let startWatch;
         let theme = 0
         function changeTheme(){
 
@@ -140,6 +192,7 @@
                 theme = 1
 
                 themeBtn.textContent = "Light Mode"
+                display.style.color = "black"
                 document.body.style.backgroundColor = "black"
                 document.body.style.color = "aliceblue"
             }
@@ -158,10 +211,10 @@
         function validateInput(minutes , seconds){
 
             if(isNaN(minutes) || isNaN(seconds)){
-                alert("Please Enter minutes or seconds properly")
-                display.innerHTML = "0:00"
-                clearInterval(startTimer)
-                return
+                return true
+            }
+            else{
+                return false
             }
 
         }
@@ -174,8 +227,13 @@
 
             startTimer = setInterval(() => {
 
-                validateInput(minutes , seconds)
-
+                let isNan = validateInput(minutes , seconds)
+                if(isNan){
+                    clearInterval(startTimer)
+                    alert("Please enter minutes and seconds.")
+                    display.innerHTML = ""
+                    return
+                }
                 if (minutes === 0 && seconds === 0) {
                     clearInterval(startTimer);
                     display.innerHTML = "Times Up !";
@@ -210,9 +268,45 @@
         resetBtn.addEventListener("click" , function (){
             clearInterval(startTimer)
             display.innerHTML = "0:00"
-            
         })
-        
+        stopReset.addEventListener("click" , function (){
+            clearInterval(startWatch)
+            stopwatchResult.innerHTML = "0:00:00"
+        })
+        stopwatchBtn.addEventListener("click" , function (){
+            let stopMinutes = 0
+            let stopSeconds = 0
+            let stopMilliSeconds = 0
+            startWatch = setInterval(function (){
+                    if(stopMilliSeconds === 99){
+                        stopSeconds += 1
+                        stopMilliSeconds = 0
+                    }
+                    else{
+                        stopMilliSeconds++
+                    }
+                    if(stopSeconds === 59){
+                        stopSeconds = 0
+                        stopMinutes += 1
+                    }
+                    if(stopSeconds < 10 && stopMilliSeconds < 10){
+                        stopwatchResult.innerHTML = `${stopMinutes}:0${stopSeconds}.0${stopMilliSeconds}`
+                    }
+                    else if(stopMilliSeconds < 10){
+                        stopwatchResult.innerHTML = `${stopMinutes}:${stopSeconds}.0${stopMilliSeconds}`
+                    }
+                    else if(stopSeconds < 10){
+                        stopwatchResult.innerHTML = `${stopMinutes}:0${stopSeconds}.${stopMilliSeconds}`
+                    }
+                    else{
+                        stopwatchResult.innerHTML = `${stopMinutes}:${stopSeconds}.${stopMilliSeconds}`
+                    }
+                
+            } , 10)
+        })
+        stopBtn.addEventListener("click" , function (){
+            clearInterval(startWatch)
+        })
     </script>
 </body>
 </html>

@@ -185,6 +185,7 @@
         let startTimer;
         let startWatch;
         let theme = 0
+        let isClicked = 0;
         function changeTheme(){
 
             if(theme == 0){
@@ -219,7 +220,11 @@
 
         }
         startBtn.addEventListener("click" , (event) => {
-
+            isClicked += 1
+            if(isClicked > 1){
+                clearInterval(startTimer)
+                alert("Too many Clicks.")
+            }
             event.preventDefault()
 
             let minutes = parseInt(document.getElementById("minutes").value)
@@ -274,6 +279,11 @@
             stopwatchResult.innerHTML = "0:00:00"
         })
         stopwatchBtn.addEventListener("click" , function (){
+            isClicked += 1
+            if(isClicked > 1){
+                clearInterval(startWatch)
+                alert("Too many Clicks.")
+            }
             let stopMinutes = 0
             let stopSeconds = 0
             let stopMilliSeconds = 0

@@ -226,6 +226,7 @@
                 clearInterval(startTimer)
                 alert("Too many Clicks.")
             }
+
             event.preventDefault()
 
             let minutes = parseInt(document.getElementById("minutes").value)
@@ -273,6 +274,7 @@
         })
         resetBtn.addEventListener("click" , function (){
             clearInterval(startTimer)
+            isClicked_timer = 0
             display.innerHTML = "0:00"
         })
         stopReset.addEventListener("click" , function (){
@@ -283,7 +285,7 @@
             isClicked_stopWatch += 1
             if(isClicked_stopWatch > 1){
                 clearInterval(startWatch)
-                alert("Too many Clicks.")
+                alert("Timer already started.Please loook at the output screen.")
             }
             let stopMinutes = 0
             let stopSeconds = 0
@@ -317,6 +319,7 @@
         })
         stopBtn.addEventListener("click" , function (){
             clearInterval(startWatch)
+            isClicked_stopWatch = 0
         })
     </script>
 </body>
